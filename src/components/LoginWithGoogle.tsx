@@ -1,11 +1,18 @@
-import Link from "next/link";
+"use client";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 const LoginWithGoogle = () => {
+  const router = useRouter();
+  const toastId = React.useRef(null);
+  const handleLogin = async () => {
+    router.push(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth`);
+  };
+
   return (
-    <Link
+    <button
       className="bg-blue-500 flex justify-center items-center gap-2 text-white px-8 py-2 rounded-lg"
-      href="/api/auth/google"
+      onClick={handleLogin}
     >
       <span className=" bg-white rounded-md aspect-square p-1">
         <svg
@@ -35,7 +42,7 @@ const LoginWithGoogle = () => {
         </svg>
       </span>
       Login with Google
-    </Link>
+    </button>
   );
 };
 

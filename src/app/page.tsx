@@ -1,5 +1,4 @@
-import LoginWithGoogle from "@/app/components/LoginWithGoogle";
-import Link from "next/link";
+import LoginWithGoogle from "@/components/LoginWithGoogle";
 
 const Home = () => {
   return (
