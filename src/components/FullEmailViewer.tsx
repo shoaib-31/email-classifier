@@ -46,7 +46,7 @@ const FullEmailViewer: React.FC<FullEmailViewerProps> = ({
   const htmlParser = new (Parser as any)();
 
   return (
-    <div className="  overflow-y-scroll h-screen flex flex-col gap-2 items-center p-8">
+    <div className="  overflow-scroll h-screen flex flex-col gap-2 p-8">
       {classification && (
         <div className=" w-full flex items-center gap-2">
           Category:
@@ -54,7 +54,7 @@ const FullEmailViewer: React.FC<FullEmailViewerProps> = ({
         </div>
       )}
       {!email.htmlContent && (
-        <p className={" p-8 bg-gray-200/50 rounded-xl"}>
+        <p className=" p-8 bg-gray-200/50 rounded-xl">
           {htmlParser.parse(email.snippet)}
         </p>
       )}

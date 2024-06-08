@@ -24,11 +24,6 @@ const Classify = () => {
   const router = useRouter();
   const handleLogout = async () => {
     await axios.get("/api/auth/logout");
-    setUser(null);
-    localStorage.removeItem("user");
-    setApiKey("");
-    localStorage.removeItem("openAIKey");
-    router.push("/");
     toast.success("Logged out successfully", {
       position: "bottom-right",
       autoClose: 4000,
@@ -39,6 +34,11 @@ const Classify = () => {
       theme: "light",
       transition: Slide,
     });
+    localStorage.removeItem("user");
+    localStorage.removeItem("geminiAPIKey");
+    setApiKey("");
+    setUser(null);
+    window.location.href = "/";
   };
   const getAvatarFallback = (name: string) => {
     return name

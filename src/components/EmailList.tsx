@@ -101,7 +101,7 @@ const EmailList = () => {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed top-0 right-0 w-full md:w-1/3 h-full bg-white shadow-lg"
+            className="fixed top-0 right-0 md:w-1/3 h-full bg-white shadow-lg"
           >
             <SidebarCloseButton onClose={handleCloseSidebar} />
             <FullEmailViewer
