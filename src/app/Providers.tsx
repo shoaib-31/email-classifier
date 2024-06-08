@@ -11,7 +11,7 @@ const Providers = ({
   return (
     <RecoilRoot>
       {children}
-      <ToastContainer />
+      <ToastContainer position="bottom-right" />
     </RecoilRoot>
   );
 };

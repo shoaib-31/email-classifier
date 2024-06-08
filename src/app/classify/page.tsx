@@ -2,10 +2,8 @@
 import { useRecoilState, useRecoilValue } from "recoil";
 import { getUserFromCookies, userAtom } from "../../atoms/userAtom";
 import { openAIKeyAtom } from "../../atoms/openAIKeyAtom";
-import OpenAIKeyInput from "../../components/OpenAIKeyInput";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { cookies } from "next/headers";
 import axios from "axios";
 import { Slide, toast } from "react-toastify";
 import EmailList from "@/components/EmailList";
@@ -42,14 +40,39 @@ const Classify = () => {
       transition: Slide,
     });
   };
+  const getAvatarFallback = (name: string) => {
+    return name
+      .split(" ")
+      .map((n: string) => n[0])
+      .join("");
+  };
   return (
-    <div className=" w-screen min-h-screen overflow-x-hidden flex items-center flex-col gap-8 text-black bg-white mx-auto p-8">
+    <div className=" w-screen relative min-h-screen overflow-x-hidden flex items-center flex-col gap-8 text-black bg-white mx-auto p-8">
       <div className=" w-4/5 xl:w-3/5  flex items-center gap-4 p-4 bg-gray-200/50 rounded-2xl">
-        <img src={user?.picture} alt={user?.name} className="rounded-full" />
-        <div className=" flex-1">
-          <h1 className="text-2xl font-bold">{user?.name}</h1>
-          <p>Email: {user?.email}</p>
-        </div>
+        {user?.picture ? (
+          <img
+            src={user?.picture}
+            alt={user?.name}
+            className="rounded-full h-20 w-20"
+          />
+        ) : user?.name ? (
+          <div className="rounded-full bg-gray-500 flex justify-center items-center h-20 w-20">
+            {getAvatarFallback(user?.name)}
+          </div>
+        ) : (
+          <div className="rounded-full h-20 w-20 animate-pulse bg-gray-200"></div>
+        )}
+        {user?.name || user?.email ? (
+          <div className=" flex-1">
+            <h1 className="text-2xl font-bold">{user?.name}</h1>
+            <p>Email: {user?.email}</p>
+          </div>
+        ) : (
+          <div className="flex-1 ">
+            <div className="h-6 animate-pulse bg-gray-300 rounded w-1/2 mb-4"></div>
+            <div className="h-4 animate-pulse bg-gray-300 rounded w-1/3"></div>
+          </div>
+        )}
         <div className=" flex justify-center items-center">
           <button
             onClick={handleLogout}

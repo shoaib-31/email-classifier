@@ -1,5 +1,7 @@
 import React from "react";
-
+import { Parser } from "html-to-react";
+import { Poppins } from "next/font/google";
+import ClassifyLabel from "./ClassifyLabel";
 type EmailComponentProps = {
   id: string;
   body: string;
@@ -7,8 +9,13 @@ type EmailComponentProps = {
   senderName: string;
   subject: string;
   classification?: string;
+  onClick: () => void;
 };
 
+const poppins = Poppins({
+  weight: ["400"],
+  subsets: ["latin"],
+});
 const EmailComponent = ({
   id,
   body,
@@ -16,11 +23,15 @@ const EmailComponent = ({
   senderName,
   subject,
   classification,
+  onClick,
 }: EmailComponentProps) => {
+  const htmlParser = new (Parser as any)();
+
   return (
     <div
       key={"email-" + id}
-      className=" w-full bg-gray-200/50 flex flex-col relative p-4 rounded-lg"
+      onClick={onClick}
+      className=" w-3/5 bg-gray-200/50 transition hover:bg-gray-200/90 cursor-pointer border-[1px] border-gray-300 flex flex-col p-4 rounded-lg"
     >
       <h1 className="text-2xl my-2 font-semibold">{senderName}</h1>
       <p className=" flex text-gray-600 w-fit">
@@ -33,26 +44,11 @@ const EmailComponent = ({
             {subject}
           </span>
         </p>
-        {classification && (
-          <div
-            className={
-              "p-2 capitalize text-white px-4 rounded-lg font-medium " +
-              (classification === "spam"
-                ? "bg-red-500"
-                : classification === "important"
-                ? "bg-green-500"
-                : classification === "promotion"
-                ? "bg-yellow-500"
-                : classification === "social"
-                ? "bg-blue-500"
-                : "bg-gray-500")
-            }
-          >
-            {classification}
-          </div>
-        )}
+        {classification && <ClassifyLabel classification={classification} />}
       </div>
-      <p className=" my-2 text-sm line-clamp-2">{body}</p>
+      <div className={" my-2 text-sm line-clamp-1 " + poppins.className}>
+        {htmlParser.parse(body)}
+      </div>
     </div>
   );
 };

@@ -35,10 +35,17 @@ export async function POST(req: NextRequest, res: NextResponse) {
                 userId: 'me',
                 id: message.id,
             });
+
             const subject = msg.data.payload.headers.find((header: any) => header.name === 'Subject');
             const from = msg.data.payload.headers.find((header: any) => header.name === 'From');
-            const senderName = from?.value.split('<')[0];
-            const senderEmail = from?.value.split('<')[1].split('>')[0];
+            let senderName, senderEmail;
+
+            if (from && from.value) {
+                const splitValue = from.value.split('<');
+                senderName = splitValue[0];
+                senderEmail = splitValue.length > 1 ? splitValue[1].split('>')[0] : undefined;
+            }
+
             const messageData = {
                 id: message.id,
                 body: msg.data.snippet,
