@@ -7,6 +7,7 @@ import Loader from "./Loader";
 import ClassifyButton from "./ClassifyButton";
 import FullEmailViewer from "./FullEmailViewer";
 import SidebarCloseButton from "./SidebarCloseButton";
+import APIKeyInput from "./APIKeyInput";
 
 const EmailList = () => {
   const emailCounts = [5, 10, 15, 20, 25];
@@ -21,16 +22,16 @@ const EmailList = () => {
     setClassification([]);
   }, [emailCount]);
 
+  if (localStorage.getItem("geminiAPIKey") === null) {
+    return <APIKeyInput />;
+  }
   async function fetchLastEmails() {
     setLoading(true);
     try {
       const emails = await axios.post("/api/fetch-emails", {
         emailCount: emailCount,
       });
-      console.log(emails.data.messages);
-
       setEmails(emails.data.messages);
-      localStorage.setItem("emails", JSON.stringify(emails.data.messages));
     } catch (e) {
       toast.error("Error fetching emails");
     } finally {

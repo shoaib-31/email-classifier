@@ -19,7 +19,9 @@ export async function middleware(req: NextRequest) {
             sameSite: 'strict',
             path: '/',
         });
-
+        if (req.nextUrl.pathname === '/') {
+            return NextResponse.redirect(new URL('/classify', req.url));
+        }
         return response;
     } catch (error) {
         console.error('JWT verification failed:', error);
@@ -28,5 +30,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-    matcher: ['/classify'],
+    matcher: ['/', '/classify'],
 };

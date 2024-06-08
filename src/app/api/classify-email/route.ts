@@ -1,10 +1,8 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { NextRequest, NextResponse } from 'next/server';
 
-const apiKey = process.env.GEMINI_API_KEY;
-
 export async function POST(req: NextRequest, res: NextResponse) {
-    const { messages } = await req.json();
+    const { messages, apiKey } = await req.json();
 
     if (!messages || !Array.isArray(messages)) {
         return NextResponse.json({ error: 'Invalid input. Expecting an array of messages.' },
@@ -28,9 +26,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
         const result = await geminiModel.generateContent(prompt);
         const classification = result.response.candidates[0].content.parts[0].text;
         const cleanedResponse = JSON.parse(classification!.replace(/```json|```/g, '').trim());
-
-        console.log(cleanedResponse);
-
         return NextResponse.json({ classification: cleanedResponse });
     }
     catch (e) {

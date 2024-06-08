@@ -5,13 +5,9 @@ export async function POST(req: NextRequest, res: NextResponse) {
     const accessToken: any = req.cookies.get('accessToken')?.value;
     const parsedReq = await req.json();
     const emailCount = parsedReq.emailCount;
-    console.log("emailcount", emailCount);
-
     if (!accessToken) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    console.log("accessToken", accessToken);
-
 
     const oauth2Client = new google.auth.OAuth2(
         process.env.GOOGLE_CLIENT_ID,
