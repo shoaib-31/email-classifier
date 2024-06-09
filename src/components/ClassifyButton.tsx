@@ -4,14 +4,20 @@ import { toast } from "react-toastify";
 
 const ClassifyButton = ({ emails, setClassification }: any) => {
   const [loading, setLoading] = React.useState(false);
+  const [apiKey, setApiKey] = React.useState("");
+  React.useEffect(() => {
+    const storedApiKey = localStorage.getItem("geminiAPIKey");
+    if (storedApiKey) {
+      setApiKey(storedApiKey);
+    }
+  }, [setApiKey]);
   const handleClassification = async () => {
     setLoading(true);
     try {
       const messageBodies = emails.map((email: any) => email.body);
-      const API_KEY = localStorage.getItem("geminiAPIKey");
       const response = await axios.post("/api/classify-email", {
         messages: messageBodies,
-        apiKey: API_KEY,
+        apiKey: apiKey,
       });
       setClassification(response.data.classification);
     } catch (error) {

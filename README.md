@@ -112,3 +112,5 @@ Open http://localhost:3000 in your browser to see the application.
 - Authorize the application to access your Google account.
 - After logging in, you will be redirected to the /classify page.
 - On the /classify page, you can fetch and classify your emails.
+
+**Note**: On runnning the app, if emails are not fetched for the first time Please logout and login again.

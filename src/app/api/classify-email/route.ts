@@ -20,11 +20,11 @@ export async function POST(req: NextRequest, res: NextResponse) {
     const geminiModel = googleAI.getGenerativeModel({
         model: "gemini-1.5-flash",
         geminiConfig,
-    });
+    } as any);
     const prompt = generatePrompt(messages);
     try {
         const result = await geminiModel.generateContent(prompt);
-        const classification = result.response.candidates[0].content.parts[0].text;
+        const classification = result.response.candidates?.[0].content.parts[0].text;
         const cleanedResponse = JSON.parse(classification!.replace(/```json|```/g, '').trim());
         return NextResponse.json({ classification: cleanedResponse });
     }

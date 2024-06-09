@@ -5,8 +5,10 @@ import { openAIKeyAtom } from "../../atoms/openAIKeyAtom";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import dynamic from "next/dynamic";
 import { Slide, toast } from "react-toastify";
 import EmailList from "@/components/EmailList";
+
 const Classify = () => {
   const [user, setUser] = useRecoilState(userAtom);
   const [apiKey, setApiKey] = useRecoilState(openAIKeyAtom);
@@ -34,7 +36,6 @@ const Classify = () => {
       theme: "light",
       transition: Slide,
     });
-    localStorage.removeItem("user");
     localStorage.removeItem("geminiAPIKey");
     setApiKey("");
     setUser(null);
@@ -88,4 +89,6 @@ const Classify = () => {
   );
 };
 
-export default Classify;
+export default dynamic(() => Promise.resolve(Classify), {
+  ssr: false,
+});
