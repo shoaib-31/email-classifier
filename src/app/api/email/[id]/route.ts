@@ -23,6 +23,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
             userId: 'me',
             id: params.id as string,
         });
+
         if (message.data.payload?.parts === undefined && message.data.payload?.mimeType === 'text/html') {
             const htmlContent = Buffer.from(message.data.payload.body?.data, 'base64').toString('utf-8');
             return NextResponse.json({
@@ -32,36 +33,38 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
                 fullemail: message.data
             }, { status: 200 });
         }
-        // Extract HTML content from the message
+
         const parts = message.data.payload?.parts || [];
         let htmlContent = null;
         let textContent = null;
-        let newParts = null;
         let fileAttachments = [];
-        parts.forEach(part => {
-            if (part.mimeType === 'text/html' && part.body?.data) {
-                htmlContent = Buffer.from(part.body.data, 'base64').toString('utf-8');
-            } else if (part.mimeType === 'text/plain' && part.body?.data) {
-                textContent = Buffer.from(part.body.data, 'base64').toString('utf-8');
-            } else if (part.mimeType === 'multipart/alternative') {
-                newParts = part.parts;
-            } else if (/^application\//.test(part.mimeType)) {
-                fileAttachments.push({
-                    mimeType: part.mimeType,
-                    filename: part.filename,
-                    attachmentId: part.body.attachmentId,
-                });
-            }
-        });
-        if (newParts) {
-            newParts.forEach(part => {
+
+        const attachmentMimeTypes = [
+            /^application\//,
+            /^image\//,
+            /^audio\//,
+            /^video\//
+        ];
+
+        const processParts = (parts) => {
+            parts.forEach(part => {
                 if (part.mimeType === 'text/html' && part.body?.data) {
                     htmlContent = Buffer.from(part.body.data, 'base64').toString('utf-8');
                 } else if (part.mimeType === 'text/plain' && part.body?.data) {
                     textContent = Buffer.from(part.body.data, 'base64').toString('utf-8');
+                } else if (part.mimeType === 'multipart/alternative' || part.mimeType === 'multipart/mixed') {
+                    processParts(part.parts || []);
+                } else if (attachmentMimeTypes.some(regex => regex.test(part.mimeType))) {
+                    fileAttachments.push({
+                        mimeType: part.mimeType,
+                        filename: part.filename,
+                        attachmentId: part.body.attachmentId,
+                    });
                 }
             });
-        }
+        };
+
+        processParts(parts);
         return NextResponse.json({
             id: message.data.id,
             snippet: message.data.snippet,

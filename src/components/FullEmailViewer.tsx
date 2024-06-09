@@ -23,6 +23,7 @@ const FullEmailViewer: React.FC<FullEmailViewerProps> = ({
       try {
         const response = await axios.get(`/api/email/${emailId}`);
         setEmail(response.data);
+        console.log(response.data.fullemail);
       } catch (error) {
         setError("Error fetching email");
         console.error(error);
