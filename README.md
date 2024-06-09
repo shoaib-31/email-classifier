@@ -1,6 +1,6 @@
 # Gmail Email Classifier
 
-This project is a Next.js application that allows users to log in with Google, fetch their Gmail emails, and classify them using the OpenAI API. The project uses Google OAuth for authentication, and Recoil for state management.
+This project is a Next.js application that allows users to log in with Google, fetch their Gmail emails, and classify them using the Gemini API. The project uses Google OAuth for authentication, and Recoil for state management.
 
 ## Table of Contents
 
