@@ -54,12 +54,33 @@ const FullEmailViewer: React.FC<FullEmailViewerProps> = ({
         </div>
       )}
       {!email.htmlContent && (
-        <p className=" p-8 bg-gray-200/50 rounded-xl">
-          {htmlParser.parse(email.snippet)}
-        </p>
+        <pre
+          className={
+            " p-8 bg-gray-200/50 rounded-xl font-roboto whitespace-pre-wrap"
+          }
+        >
+          {htmlParser.parse(email.textContent)}
+        </pre>
       )}
       {email.htmlContent && (
         <div dangerouslySetInnerHTML={{ __html: email.htmlContent }} />
+      )}
+      {email?.fileAttachments?.length > 0 && (
+        <div className=" w-full flex flex-col gap-2">
+          <h2 className=" text-lg font-bold">Attachments</h2>
+          {email.fileAttachments.map((attachment: any) => (
+            <div key={attachment.attachmentId} className=" w-full flex gap-2">
+              <a
+                href={`/api/email/${email.id}/attachment/${attachment.attachmentId}?filename=${attachment.filename}`}
+                target="_blank"
+                rel="noreferrer"
+                className=" text-blue-500 underline"
+              >
+                {attachment.filename}
+              </a>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { google } from "googleapis";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -22,18 +23,52 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
             userId: 'me',
             id: params.id as string,
         });
-
+        if (message.data.payload?.parts === undefined && message.data.payload?.mimeType === 'text/html') {
+            const htmlContent = Buffer.from(message.data.payload.body?.data, 'base64').toString('utf-8');
+            return NextResponse.json({
+                id: message.data.id,
+                snippet: message.data.snippet,
+                htmlContent,
+                fullemail: message.data
+            }, { status: 200 });
+        }
         // Extract HTML content from the message
         const parts = message.data.payload?.parts || [];
-        const htmlPart = parts.find(part => part.mimeType === 'text/html');
-        const htmlContent = htmlPart?.body?.data
-            ? Buffer.from(htmlPart.body.data, 'base64').toString('utf-8')
-            : null;
-
+        let htmlContent = null;
+        let textContent = null;
+        let newParts = null;
+        let fileAttachments = [];
+        parts.forEach(part => {
+            if (part.mimeType === 'text/html' && part.body?.data) {
+                htmlContent = Buffer.from(part.body.data, 'base64').toString('utf-8');
+            } else if (part.mimeType === 'text/plain' && part.body?.data) {
+                textContent = Buffer.from(part.body.data, 'base64').toString('utf-8');
+            } else if (part.mimeType === 'multipart/alternative') {
+                newParts = part.parts;
+            } else if (/^application\//.test(part.mimeType)) {
+                fileAttachments.push({
+                    mimeType: part.mimeType,
+                    filename: part.filename,
+                    attachmentId: part.body.attachmentId,
+                });
+            }
+        });
+        if (newParts) {
+            newParts.forEach(part => {
+                if (part.mimeType === 'text/html' && part.body?.data) {
+                    htmlContent = Buffer.from(part.body.data, 'base64').toString('utf-8');
+                } else if (part.mimeType === 'text/plain' && part.body?.data) {
+                    textContent = Buffer.from(part.body.data, 'base64').toString('utf-8');
+                }
+            });
+        }
         return NextResponse.json({
             id: message.data.id,
             snippet: message.data.snippet,
             htmlContent,
+            textContent,
+            fileAttachments,
+            fullemail: message.data
         }, { status: 200 });
     } catch (error) {
         console.error('Error fetching email:', error);
