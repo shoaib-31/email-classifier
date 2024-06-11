@@ -25,7 +25,7 @@ const Classify = () => {
   }, [setApiKey, setUser]);
   const router = useRouter();
   const handleLogout = async () => {
-    await axios.get("/api/auth/logout");
+    await axios.post("/api/auth/logout");
     toast.success("Logged out successfully", {
       position: "bottom-right",
       autoClose: 4000,
