@@ -30,7 +30,7 @@ const ClassifyButton = ({ emails, setClassification }: any) => {
   return (
     <button
       onClick={handleClassification}
-      className="bg-blue-500 text-white px-8 py-2 h-12 rounded-lg mr-2 hover:bg-opacity-80 transition-all"
+      className="bg-blue-500 text-white px-4 sm:px-8 py-2 h-12 rounded-lg mx-2 hover:bg-opacity-80 transition-all"
     >
       {loading ? (
         <div className=" flex gap-1 transition-all justify-center items-center">

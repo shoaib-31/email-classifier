@@ -48,25 +48,25 @@ const Classify = () => {
       .join("");
   };
   return (
-    <div className=" w-screen relative min-h-screen overflow-x-hidden flex items-center flex-col gap-8 text-black bg-white mx-auto p-8">
-      <div className=" w-4/5 xl:w-3/5  flex items-center gap-4 p-4 bg-gray-200/50 rounded-2xl">
+    <div className=" w-screen relative min-h-screen overflow-x-hidden flex items-center flex-col gap-8 text-black bg-white mx-auto p-4 sm:p-8">
+      <div className=" w-full md:w-4/5 xl:w-3/5  flex items-center flex-wrap gap-4 p-4 bg-gray-200/50 rounded-2xl">
         {user?.picture ? (
           <img
             src={user?.picture}
             alt={user?.name}
-            className="rounded-full h-20 w-20"
+            className="rounded-full h-10 sm:h-20 aspect-square"
           />
         ) : user?.name ? (
-          <div className="rounded-full bg-gray-500 flex justify-center items-center h-20 w-20">
+          <div className="rounded-full bg-gray-500 flex justify-center items-center h-10 sm:h-20 aspect-square">
             {getAvatarFallback(user?.name)}
           </div>
         ) : (
-          <div className="rounded-full h-20 w-20 animate-pulse bg-gray-200"></div>
+          <div className="rounded-full h-10 sm:h-20 aspect-square animate-pulse bg-gray-200"></div>
         )}
         {user?.name || user?.email ? (
           <div className=" flex-1">
-            <h1 className="text-2xl font-bold">{user?.name}</h1>
-            <p>Email: {user?.email}</p>
+            <h1 className="text-lg sm:text-2xl font-bold">{user?.name}</h1>
+            <p className="text-sm sm:text-xl">Email: {user?.email}</p>
           </div>
         ) : (
           <div className="flex-1 ">

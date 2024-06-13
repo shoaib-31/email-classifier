@@ -52,9 +52,12 @@ const EmailList = () => {
 
   return (
     <div className="w-full flex-1 py-4 flex items-center flex-col">
-      <div className="flex w-3/5 mb-4 items-center justify-between">
-        <div className="flex gap-2 items-center">
-          <label htmlFor="count" className="text-xl font-medium text-gray-900">
+      <div className="flex w-full md:w-4/5 xl:w-3/5 mb-4 items-center justify-between">
+        <div className="flex sm:gap-2 items-center">
+          <label
+            htmlFor="count"
+            className="text-base sm:text-xl font-medium text-gray-900"
+          >
             Select Number of Emails:
           </label>
           <select
@@ -101,7 +104,7 @@ const EmailList = () => {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed top-0 right-0 md:w-1/2 h-full bg-white shadow-lg"
+            className="fixed top-0 right-0 w-screen sm:w-fit h-full bg-white shadow-lg"
           >
             <SidebarCloseButton onClose={handleCloseSidebar} />
             <FullEmailViewer
